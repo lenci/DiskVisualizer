@@ -2,7 +2,7 @@ package ci.dv.view
 {
 	import flash.display.Sprite;
 	
-	import ci.dv.model.XMLDataProxy;
+	import ci.dv.model.DiskDataProxy;
 	import ci.dv.view.piechart.PieChart;
 	
 	import org.puremvc.as3.interfaces.INotification;
@@ -24,13 +24,13 @@ package ci.dv.view
 		
 		override public function listNotificationInterests():Array
 		{
-			return [XMLDataProxy.DATA_LOADED];
+			return [DiskDataProxy.DATA_LOADED];
 		}
 		
 		override public function handleNotification(notification:INotification):void
 		{
 			switch (notification.getName()) {
-				case XMLDataProxy.DATA_LOADED:
+				case DiskDataProxy.DATA_LOADED:
 					initPieChart(notification.getBody() as XML);
 			}
 		}

@@ -36,7 +36,7 @@ package ci.dv.view.piechart
 				pieces[i] = new Piece(_canvasManager, new Object);
 				pieces[i].tweenTo(10, {theta:57, radiusLevel: 3, delay:1});
 				pieces[i].tweenTo(10, {alpha:0.9});
-				pieces[i].tweenTo(10, {alpha:0.1, position:0, delay:3});
+				pieces[i].tweenTo(10, {alpha:0.1, position:40, delay:3});
 				++_tweeningPieceCount;
 			}
 			

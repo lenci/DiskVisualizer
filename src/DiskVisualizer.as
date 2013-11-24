@@ -1,3 +1,12 @@
+/**
+ * DiskVisualizer.as
+ * https://github.com/lenci/DiskVisualizer
+ * 
+ * lenci.miao@gmail.com
+ * 
+ * DiskVisualizer is a tool just like a FANTASTIC app called DaisyDisk(http://www.daisydiskapp.com) on Mac.
+ * The aim of this project for me is to improve my flash skills.
+ */
 package
 {
 	import ci.dv.ApplicationFacade;
@@ -9,9 +18,7 @@ package
 	
 	[SWF(width="800", height="600", frameRate="60")]
 	public class DiskVisualizer extends Sprite
-	{
-		public static const SECTOR_DEGREE_PRECISION:Number = 1;	// 1/dletaDegree
-		
+	{		
 		public function DiskVisualizer()
 		{
 			if (stage) {

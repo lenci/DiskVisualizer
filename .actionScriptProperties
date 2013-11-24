@@ -42,14 +42,20 @@
     </application>
   </applications>
   <modules/>
-  <workers/>
+  <workers managerFilePath="src/Workers.as">
+    <worker embed="true" path="src/ci/dv/model/DiskAnalyser.as"/>
+  </workers>
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
     <buildTarget buildTargetName="default" platformId="default">
-      <airSettings airCertificatePath="" airTimestamp="true" anePathSet="true" version="1">
+      <airSettings airCertificatePath="/Users/lenci/Documents/lenci.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths/>
+        <newLaunchParams/>
+        <modifiedLaunchParams/>
+        <newPackagingParams/>
+        <modifiedPackagingParams/>
       </airSettings>
       <actionScriptSettings version="1"/>
     </buildTarget>

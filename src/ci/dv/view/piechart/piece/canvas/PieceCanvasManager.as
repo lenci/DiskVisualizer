@@ -12,13 +12,13 @@ package ci.dv.view.piechart.piece.canvas
 		
 		private var _bitmapCanvas:BitmapData;
 		
-		private var _centralX:int;
-		private var _centralY:int;
+		public var _canvasCentralX:int;
+		public var _canvasCentralY:int;
 		
 		public function PieceCanvasManager(canvasWidth:int, canvasHeight:int)
 		{
-			_centralX = canvasWidth >> 1;
-			_centralY = canvasHeight >> 1;
+			_canvasCentralX = canvasWidth >> 1;
+			_canvasCentralY = canvasHeight >> 1;
 			
 			for (var i:int = 0; i < _spriteCanvasPool.length; ++i) {
 				_spriteCanvasesAvailable.push(i);
@@ -36,8 +36,8 @@ package ci.dv.view.piechart.piece.canvas
 				
 				if (_spriteCanvasPool[index] == null) {
 					_spriteCanvasPool[index] = new PieceSpriteCanvas();
-					_spriteCanvasPool[index].x = _centralX;
-					_spriteCanvasPool[index].y = _centralY;
+					_spriteCanvasPool[index].x = _canvasCentralX;
+					_spriteCanvasPool[index].y = _canvasCentralY;
 				}
 				
 				addChild(_spriteCanvasPool[index]);

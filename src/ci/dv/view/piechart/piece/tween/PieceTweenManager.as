@@ -1,7 +1,7 @@
 package ci.dv.view.piechart.piece.tween
 {
 	import ci.dv.view.piechart.PieChart;
-	import ci.dv.view.piechart.piece.PieceDrawer;
+	import ci.dv.view.piechart.piece.canvas.PiecePainter;
 	import ci.dv.view.piechart.piece.canvas.PieceCanvasManager;
 
 	public class PieceTweenManager
@@ -158,7 +158,7 @@ package ci.dv.view.piechart.piece.tween
 			_pieceVisible = checkPieceVisible();
 			
 			if (_pieceVisible) {
-				_spriteCanvasIndex = PieceDrawer.draw(_canvasManager, _spriteCanvasIndex, _nowRadiusLevel * 50, 50, 
+				_spriteCanvasIndex = PiecePainter.draw(_canvasManager, _spriteCanvasIndex, _nowRadiusLevel * 50, 50, 
 						_nowTheta, _nowPosition, _fillColor, _nowAlpha, true, 1, _lineColor, _nowAlpha);
 			} else {
 				// no need to draw

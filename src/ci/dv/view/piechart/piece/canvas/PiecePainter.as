@@ -1,22 +1,23 @@
-package ci.dv.view.piechart.piece
+package ci.dv.view.piechart.piece.canvas
 {	
+	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	
-	import ci.dv.view.piechart.piece.canvas.PieceCanvasManager;
-	import ci.dv.view.piechart.piece.canvas.PieceSpriteCanvas;
 	
-	public class PieceDrawer
+	public class PiecePainter
 	{
 		private static const SIDES:int = 3;
-		private static const CANVAS_EDGE:int = 15;
-		private static const DRAW_ON_BITMAP_CANVAS_SIZE_THRESHOLD:uint = 1;
+		private static const CANVAS_EDGE:int = 1;
+		private static const DRAW_ON_BITMAP_CANVAS_AREA_THRESHOLD:uint = 10000000;
 		
 		private static var drawOnBitmapCanvas:Boolean;
 		private static var canvas:PieceSpriteCanvas;
 		private static var canvasForBitmapDrawing:PieceSpriteCanvas = new PieceSpriteCanvas();
 		private static var canvasHolderForBitmapDrawing:Sprite;
+		private static var tempBitmapData:BitmapData;
+		private static var destPointOfCopyingPixelsToBitmapCanvas:Point = new Point();
 		private static var g:Graphics;
 		private static var percentage:Number;
 		private static var sidesToDraw:int;
@@ -37,7 +38,7 @@ package ci.dv.view.piechart.piece
 		private static var maxX:Number;
 		private static var maxY:Number;
 		
-		public function PieceDrawer()
+		public function PiecePainter()
 		{}
 		
 		public static function draw(canvasManager:PieceCanvasManager, spriteCanvasIndex:int, outsideRadius:int,
@@ -116,7 +117,7 @@ package ci.dv.view.piechart.piece
 			}
 			
 			// determine draw on sprite canvas or bitmap canvas
-			if ((maxX - minX) * (maxY - minY) > DRAW_ON_BITMAP_CANVAS_SIZE_THRESHOLD) {
+			if ((maxX - minX) * (maxY - minY) > DRAW_ON_BITMAP_CANVAS_AREA_THRESHOLD) {
 				// draw on sprite canvas
 				drawOnBitmapCanvas = false;
 				
@@ -193,10 +194,21 @@ package ci.dv.view.piechart.piece
 			g.endFill();
 			
 			if (drawOnBitmapCanvas) {
+				//draw the graphics on the canvasForBitmapDrawing to canvasManager's bitmap canvas
 				canvasHolderForBitmapDrawing = new Sprite();
+				canvas.x =  -minX + CANVAS_EDGE;
+				canvas.y = -minY + CANVAS_EDGE;
+				canvasHolderForBitmapDrawing.addChild(canvas);
 				
+				tempBitmapData = new BitmapData(maxX - minX + CANVAS_EDGE << 1, maxY - minY + CANVAS_EDGE << 1, true, 0);
+				tempBitmapData.draw(canvasHolderForBitmapDrawing, null, null, null, null, true);
+				
+				destPointOfCopyingPixelsToBitmapCanvas.x = minX - CANVAS_EDGE + canvasManager._canvasCentralX;
+				destPointOfCopyingPixelsToBitmapCanvas.y = minY - CANVAS_EDGE + canvasManager._canvasCentralY;
+				canvasManager.getBitmapCanvas().copyPixels(tempBitmapData, tempBitmapData.rect, destPointOfCopyingPixelsToBitmapCanvas, null, null, true);
+				
+				tempBitmapData.dispose();
 			}
-			
 			
 			return spriteCanvasIndex;
 		}

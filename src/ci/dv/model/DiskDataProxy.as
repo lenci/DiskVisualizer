@@ -9,14 +9,14 @@ package ci.dv.model
 	
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
-	public class XMLDataProxy extends Proxy
+	public class DiskDataProxy extends Proxy
 	{
 		public static const NAME:String = "XMLDataProxy";
 		public static const DATA_LOADED:String = "DataLoaded";
 		
 		private var _xmlData:XML;
 		
-		public function XMLDataProxy()
+		public function DiskDataProxy()
 		{
 			super();
 			
