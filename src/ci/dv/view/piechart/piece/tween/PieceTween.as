@@ -1,5 +1,7 @@
 package ci.dv.view.piechart.piece.tween
 {
+	import com.greensock.easing.Ease;
+	
 	import flash.utils.getTimer;
 	
 	public class PieceTween
@@ -34,15 +36,18 @@ package ci.dv.view.piechart.piece.tween
 		private var _tweenDuration:int;
 		private var _tweenDelay:int;
 		private var _tweenProgress:Number;
+		private var _tweenRatio:Number;
 		private var _tweenStartTime:int;
 		private var _currentTime:int;
+		
+		private var _ease:Ease;
 		
 		public function PieceTween()
 		{
 			
 		}
 		
-		public function start(from:Object, to:Object, duration:Number, delay:Number = 0, onComplete:Function = null):void
+		public function start(from:Object, to:Object, duration:Number, delay:Number = 0, ease:Ease = null, onComplete:Function = null):void
 		{	
 			if (to.theta != null) {
 				_tweenTheta = true;
@@ -88,8 +93,17 @@ package ci.dv.view.piechart.piece.tween
 				_tweenAlpha = false;
 			}
 			
+			if (ease) {
+				_ease = ease;
+			} else {
+				_ease = null;
+			}
+				
+			
 			if (onComplete) {
 				_onCompleteHandle = onComplete;
+			} else {
+				_onCompleteHandle = null;
 			}
 			
 			_tweenDuration = duration * 1000;
@@ -110,19 +124,25 @@ package ci.dv.view.piechart.piece.tween
 			if (isTweening && (_currentTime - _tweenStartTime > _tweenDelay)) {
 				_tweenProgress = (_currentTime - (_tweenStartTime + _tweenDelay)) / _tweenDuration;
 				
+				if (_ease) {
+					_tweenRatio = _ease.getRatio(_tweenProgress);
+				} else {
+					_tweenRatio = _tweenProgress;
+				}
+				
 				// tweening
 				if (_tweenProgress < 1) {
 					if (_tweenTheta) {
-						_nowTheta = _fromTheta + _deltaTheta * _tweenProgress;
+						_nowTheta = _fromTheta + _deltaTheta * _tweenRatio;
 					}
 					if (_tweenRadiusLevel) {
-						_nowRadiusLevel = _fromRadiusLevel + _deltaRadiusLevel * _tweenProgress;
+						_nowRadiusLevel = _fromRadiusLevel + _deltaRadiusLevel * _tweenRatio;
 					}
 					if (_tweenPosition) {
-						_nowPosition = _fromPosition + _deltaPosition * _tweenProgress;
+						_nowPosition = _fromPosition + _deltaPosition * _tweenRatio;
 					}
 					if (_tweenAlpha) {
-						_nowAlpha = _fromAlpha + _deltaAlpha * _tweenProgress;
+						_nowAlpha = _fromAlpha + _deltaAlpha * _tweenRatio;
 					}
 					
 				// complete

@@ -87,8 +87,10 @@ package ci.dv.view.piechart.piece.tween
 			}
 
 			_runningTweens.push(t);
-			t.start(tweenFromParams, tweenToParams, duration, 
-				(params.delay) ? params.delay : 0, params.onComplete);
+			t.start(tweenFromParams, tweenToParams, duration,
+				(params.delay) ? params.delay : 0,
+				(params.ease) ? params.ease : null,
+				(params.onComplete) ? params.onComplete : null);
 		}
 		
 		public function get isShapeOnBitmapCanvas():Boolean

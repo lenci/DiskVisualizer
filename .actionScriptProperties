@@ -4,6 +4,7 @@
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="/Users/lenci/Developer/Hi-ReS-Stats/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="/Users/lenci/Developer/puremvc-as3-standard-framework/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="/Users/lenci/Developer/GreenSock-AS3/src"/>
     </compilerSourcePath>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">

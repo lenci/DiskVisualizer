@@ -22,6 +22,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[source path] GreenSock-AS3-src</name>
+			<type>2</type>
+			<location>/Users/lenci/Developer/GreenSock-AS3/src</location>
+		</link>
+		<link>
 			<name>[source path] Hi-ReS-Stats-src</name>
 			<type>2</type>
 			<location>/Users/lenci/Developer/Hi-ReS-Stats/src</location>
