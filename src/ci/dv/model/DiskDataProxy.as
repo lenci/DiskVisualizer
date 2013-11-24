@@ -1,47 +1,76 @@
 package ci.dv.model
 {
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLLoaderDataFormat;
-	import flash.net.URLRequest;
+	import flash.system.MessageChannel;
+	import flash.system.Worker;
+	import flash.system.WorkerDomain;
+	import flash.utils.ByteArray;
 	
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
 	public class DiskDataProxy extends Proxy
 	{
-		public static const NAME:String = "XMLDataProxy";
-		public static const DATA_LOADED:String = "DataLoaded";
+		public static const ANALYSING_COMPLETED:String = "AnalysingCompleted";
+		public static const INVALID_PARH:String = "InvalidPath";
+		public static const NO_PATH_ACCESS_PERMISSION:String = "NoPathAccessPermission";
+		public static const PATH_IS_NOT_A_DIR:String = "PathIsNotADir";
 		
-		private var _xmlData:XML;
+		private var _diskAnalyser:Worker;
+		private var _mainToDiskAnalyser:MessageChannel;
+		private var _diskAnalyserToMain:MessageChannel;
 		
-		public function DiskDataProxy()
+		private var _fileTreeDataBytes:ByteArray = new ByteArray();
+		private var _fileTreeData:Object;
+		private var _path:String;
+		
+		public function DiskDataProxy(proxyName:String = null, data:Object = null)
 		{
-			super();
+			super(proxyName, data);
 			
-			var loader:URLLoader = new URLLoader();
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
-			loader.addEventListener(Event.COMPLETE, onComplete);
-			loader.load(new URLRequest("SourceCounter_Result_L.xml"));
+			if (WorkerDomain.isSupported) {
+				// give the worker app privileges, or the worker will running with a LOCAL_WITH_NETWORK sandbox
+				_diskAnalyser = WorkerDomain.current.createWorker(Workers.ci_dv_model_DiskAnalyser, true);
+				
+				_mainToDiskAnalyser = Worker.current.createMessageChannel(_diskAnalyser);
+				_diskAnalyserToMain = _diskAnalyser.createMessageChannel(Worker.current);
+				_diskAnalyser.setSharedProperty("MainToDiskAnalyserChannel", _mainToDiskAnalyser);
+				_diskAnalyser.setSharedProperty("DiskAnalyserToMainChannel", _diskAnalyserToMain);
+				
+				_diskAnalyserToMain.addEventListener(Event.CHANNEL_MESSAGE, onMessageFromDiskAnalyser);
+				
+				_fileTreeDataBytes.shareable = true;
+				_diskAnalyser.setSharedProperty("FileTreeDataBytes", _fileTreeDataBytes);
+				
+				_diskAnalyser.start();
+				
+				analysePath("/users/lenci"); // test
+			}
 		}
 		
-		private function onIOError(e:IOErrorEvent):void
+		public function analysePath(path:String):void
 		{
-			trace(e.text);
+			_path = path;
+			_mainToDiskAnalyser.send(_path);
 		}
 		
-		private function onSecurityError(e:SecurityErrorEvent):void
-		{
-			trace(e.text);
-		}
-		
-		private function onComplete(e:Event):void
-		{
-			_xmlData = XML(URLLoader(e.target).data);
-			sendNotification(DATA_LOADED, _xmlData);
+		private function onMessageFromDiskAnalyser(e:Event):void {
+			switch (_diskAnalyserToMain.receive() as String) {
+				case DiskAnalyser.ANALYSING_COMPLETED:
+					_fileTreeData = _fileTreeDataBytes.readObject();
+					sendNotification(ANALYSING_COMPLETED, _fileTreeData);
+					break;
+				
+				case DiskAnalyser.INVALID_PATH:
+					sendNotification(INVALID_PARH, _path);
+					break;
+				
+				case DiskAnalyser.NO_PERMISSION:
+					sendNotification(NO_PATH_ACCESS_PERMISSION, _path);
+					break;
+				
+				case DiskAnalyser.PATH_IS_NOT_A_DIR:
+					sendNotification(PATH_IS_NOT_A_DIR, _path);
+			}
 		}
 	}
 }

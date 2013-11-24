@@ -13,6 +13,9 @@ package ci.dv.view.piechart.piece.canvas
 		{
 			super();
 			
+			mouseEnabled = false;
+			mouseChildren = false;
+			
 			addChild(_ring);
 			addChild(_polygonMask);
 			

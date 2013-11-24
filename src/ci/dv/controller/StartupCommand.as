@@ -17,8 +17,8 @@ package ci.dv.controller
 		
 		override public function execute(notification:INotification):void
 		{
-			facade.registerMediator(new StageMediator(Sprite(notification.getBody()).stage));
-			facade.registerProxy(new DiskDataProxy());
+			facade.registerMediator(new StageMediator("StageMediator", Sprite(notification.getBody()).stage));
+			facade.registerProxy(new DiskDataProxy("DiskDataProxy"));
 		}
 	}
 }

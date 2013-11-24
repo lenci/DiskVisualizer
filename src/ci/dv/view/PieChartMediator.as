@@ -10,28 +10,22 @@ package ci.dv.view
 
 	public class PieChartMediator extends Mediator
 	{
-		public static const NAME:String = "VisualizerMediator";
-		
 		private var _pieChart:PieChart;
 		
-		public function PieChartMediator(viewComponent:Sprite)
+		public function PieChartMediator(mediatorName:String = null, viewComponent:Object = null)
 		{
-			super();
-			
-			_pieChart = new PieChart(800, 600);
-			viewComponent.addChild(_pieChart);
+			super(mediatorName, viewComponent);
 		}
 		
 		override public function listNotificationInterests():Array
 		{
-			return [DiskDataProxy.DATA_LOADED];
+			return [];
 		}
 		
 		override public function handleNotification(notification:INotification):void
 		{
 			switch (notification.getName()) {
-				case DiskDataProxy.DATA_LOADED:
-					initPieChart(notification.getBody() as XML);
+				
 			}
 		}
 		
